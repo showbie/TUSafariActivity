@@ -89,10 +89,14 @@
     
     UIApplication *sharedApplication = [UIApplication performSelector:NSSelectorFromString(NSStringFromSelector(@selector(sharedApplication)))];
     if (sharedApplication) {
-        completed = [sharedApplication openURL:_URL];
+        if ([sharedApplication canOpenURL:_URL]) {
+            [sharedApplication performSelector:@selector(openURL:) withObject:_URL];
+            completed = YES;
+        }
     }
-	
-	[self activityDidFinish:completed];
+    
+    [self activityDidFinish:completed];
 }
+
 
 @end
