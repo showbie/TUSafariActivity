@@ -62,10 +62,14 @@
 - (BOOL)canPerformWithActivityItems:(NSArray *)activityItems
 {
 	for (id activityItem in activityItems) {
-		if ([activityItem isKindOfClass:[NSURL class]] && [[UIApplication sharedApplication] canOpenURL:activityItem]) {
-			return YES;
-		}
-	}
+        
+        UIApplication *sharedApplication = [UIApplication performSelector:NSSelectorFromString(NSStringFromSelector(@selector(sharedApplication)))];
+        if (sharedApplication) {
+            if ([activityItem isKindOfClass:[NSURL class]] && [sharedApplication canOpenURL:activityItem]) {
+                return YES;
+            }
+        }
+    }
 	
 	return NO;
 }
@@ -81,7 +85,12 @@
 
 - (void)performActivity
 {
-	BOOL completed = [[UIApplication sharedApplication] openURL:_URL];
+    BOOL completed = NO;
+    
+    UIApplication *sharedApplication = [UIApplication performSelector:NSSelectorFromString(NSStringFromSelector(@selector(sharedApplication)))];
+    if (sharedApplication) {
+        completed = [sharedApplication openURL:_URL];
+    }
 	
 	[self activityDidFinish:completed];
 }
